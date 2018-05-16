@@ -138,7 +138,7 @@ def linear(A, W, b):
     return Z
 
 
-def logistic_cost(Y_hat, Y):
+def logistic_cost(Y_hat, Y, weights):
     """
     Computes the cost function associated with logistic regression
 
@@ -149,13 +149,16 @@ def logistic_cost(Y_hat, Y):
         Y : array_like
             True values for input files (binary classification)
 
+        weights : dictionary
+
     Returns:
         cost : float
     """
 
     m = Y.shape[1]
 
-    arg = -Y * np.log(Y_hat) - (1 - Y) * np.log(1 - Y_hat)
+    arg = -weights['positive'] * Y * np.log(Y_hat) \
+        - weights['negative'] * (1 - Y) * np.log(1 - Y_hat)
 
     cost = 1 / m * np.sum(arg)
     assert cost.shape == ()
@@ -289,7 +292,7 @@ def forward_propagation_L_layers(X, params, activations=None):
     return Y_hat, caches
 
 
-def back_propagation(Y, cache, params):
+def back_propagation(Y, cache, params, weights):
     """
     Compute the gradient values for each step of the Neural Network
     """
@@ -298,7 +301,8 @@ def back_propagation(Y, cache, params):
     Y_hat = cache['A' + str(L)]
     m = Y_hat.shape[1]
 
-    grads['dA' + str(L)] = -np.divide(Y, Y_hat) + np.divide(1 - Y, 1 - Y_hat)
+    grads['dA' + str(L)] = -weights['positive'] * np.divide(Y, Y_hat) \
+        + weights['negative'] * np.divide(1 - Y, 1 - Y_hat)
     grads['dZ' + str(L)] = grads['dA' + str(L)] * sigmoid_grad(
                                                     cache['Z' + str(L)])
     assert grads['dZ' + str(L)].shape == cache['Z' + str(L)].shape
