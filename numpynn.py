@@ -305,7 +305,7 @@ def back_propagation(Y, cache, params):
 
     grads['dW' + str(L)] = 1 / m * np.dot(
                                           grads['dZ' + str(L)],
-                                          cache['A' + str(L-1).T])
+                                          cache['A' + str(L - 1)].T)
     grads['db' + str(L)] = 1 / m * np.sum(
                                           grads['dZ' + str(L)],
                                           axis=1,
