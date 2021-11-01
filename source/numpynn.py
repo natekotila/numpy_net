@@ -42,6 +42,26 @@ def sigmoid_grad(Z):
 
     return sg
 
+def softmax(Z):
+    """
+    Calculates the softmax vector S = e^z_i / sum(e^z_i)
+    for i = 1, 2, ..., K possible outcomes
+
+    Parameters:
+        Z: array_like
+    
+    Returns:
+        S: softmax function for Z
+    """
+
+    e_Z = np.exp(Z)
+    denom = sum(e_Z)
+
+    S = e_Z / denom
+
+    assert(S.shape == Z.shape)
+
+    return S
 
 def tanh(Z):
     """
@@ -238,7 +258,8 @@ def forward_propagation(A_prev, W, b, activation='relu'):
         A = sigmoid(Z)
     elif (activation == 'tanh'):
         A = tanh(Z)
-
+    elif (activation == 'softmax'):
+        A = softmax(Z)
     return A, Z
 
 
